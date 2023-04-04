@@ -27,12 +27,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv = __importStar(require("dotenv"));
+const movieAPI_1 = __importDefault(require("./Routes/movieAPI"));
+const cors_1 = __importDefault(require("cors"));
 // const express = require("express");
 // const dotenv = require("dotenv");
 dotenv.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT;
+const DATA_CONN = process.env.DB_CONN_STRING;
+mongoose_1.default
+    .connect(DATA_CONN)
+    .then(() => {
+    console.log("Database connected :)");
+})
+    .catch((err) => {
+    console.error("something went wrong");
+});
+app.use((0, cors_1.default)());
+app.use(express_1.default.json());
+app.use(movieAPI_1.default);
 app.get("/", (req, res) => {
     res.send("Express + TypeScript Server");
 });
